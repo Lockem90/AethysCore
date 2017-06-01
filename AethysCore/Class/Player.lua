@@ -734,7 +734,45 @@
   function Player:PainDeficitPercentage ()
     return (self:PainDeficit() / self:PainMax()) * 100;
   end
-
+  
+  --------------------------------
+  --- 19 | Chi Functions ---
+  --------------------------------
+  -- Chi.max
+  function Player:ChiMax ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.ChiMax then
+        UnitInfo.ChiMax = UnitPowerMax(self.UnitID, Enum.PowerType.Chi);
+      end
+      return UnitInfo.ChiMax;
+    end
+  end
+  -- Chi
+  function Player:Chi ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.Chi then
+        UnitInfo.Chi = UnitPower(self.UnitID, Enum.PowerType.Chi);
+      end
+      return UnitInfo.Chi;
+    end
+  end
+  -- Chi.pct
+  function Player:ChiPercentage ()
+    return (self:Chi() / self:ChiMax()) * 100;
+  end
+  -- Chi.deficit
+  function Player:ChiDeficit ()
+    return self:ChiMax() - self:Chi();
+  end
+  -- "Chi.deficit.pct"
+  function Player:ChiDeficitPercentage ()
+    return (self:ChiDeficit() / self:ChiMax()) * 100;
+  end
+  
   -- Get if the player is stealthed or not
   local IsStealthedBuff = {
     -- Normal Stealth
