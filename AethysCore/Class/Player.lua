@@ -317,6 +317,17 @@
       return UnitInfo.Rage;
     end
   end
+  -- rage.regen
+  function Player:RageRegen ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.RageRegen then
+        UnitInfo.RageRegen = select(2, GetPowerRegen(self.UnitID));
+      end
+      return UnitInfo.RageRegen;
+    end
+  end
   -- rage.pct
   function Player:RagePercentage ()
     return (self:Rage() / self:RageMax()) * 100;
@@ -328,6 +339,11 @@
   -- "rage.deficit.pct"
   function Player:RageDeficitPercentage ()
     return (self:RageDeficit() / self:RageMax()) * 100;
+  end
+  -- rage.time.to.x
+  function Player:RageTimeToX (Amount)
+    if self:RageRegen() == 0 then return -1; end
+    return Amount > self:Rage() and (Amount - self:Rage()) / self:RageRegen() or 0;
   end
 
   ---------------------------
